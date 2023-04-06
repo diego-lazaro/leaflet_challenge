@@ -1,5 +1,5 @@
 // Create the map 
-var myMap = L.map('map', {
+let myMap = L.map('map', {
     center: [39.8283, -98.5795],
     zoom: 5
   });
@@ -12,11 +12,11 @@ var myMap = L.map('map', {
     accessToken: API_KEY
   }).addTo(myMap);
   
-  // Creates the circle layer from the GeoJSON data set 
+  // Create circle layers from the GeoJSON dataset 
   function createCircleMarker(feature, latlng){
     // Change the circles appearance
     let options = {
-      radius: getRadius(feature.properties.mag) ,
+      radius: getRadius(feature.properties.mag),
       fillColor: getColor(feature.geometry.coordinates[2]),
       color: "black",
       weight: 1,
@@ -26,7 +26,7 @@ var myMap = L.map('map', {
     return L.circleMarker(latlng, options);
   }
   
-  // Give each earthquake a different radius based on their magnitude
+  // Create a different radius based on earthquake magnitude
   function getRadius(magnitude) {
     if (magnitude == 0) {
       return 1;
@@ -34,7 +34,7 @@ var myMap = L.map('map', {
     return magnitude * 4;
   }
   
-  // Give each earthquake a different color based on depth of the earthquakes
+  // Create a different color based on depth of the earthquakes
   function getColor(depth) {
     switch (true) {
       case (depth <= 10):
@@ -54,8 +54,8 @@ var myMap = L.map('map', {
     }
   }
   
-  // Store our API endpoint as queryUrl
-  var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+  // Store API endpoint as queryUrl
+  let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
   
   // Perform a GET request to the query URL
   d3.json(queryUrl).then(function(data) {
@@ -63,7 +63,7 @@ var myMap = L.map('map', {
     
     // Use Leaflet's geoJSON method to turn the data into a feature layer
     L.geoJSON(data.features, {
-      // Call the function createCircleMarker - creates symbol for this layer
+      // Call CircleMarker and create symbols for layer
       pointToLayer: createCircleMarker,
       // Create pop up layer
       onEachFeature: function(feature, layer) {
@@ -75,13 +75,13 @@ var myMap = L.map('map', {
     }).addTo(myMap) 
   
     // Set up the legend
-    var legend = L.control({ position: "bottomright" });
+    let legend = L.control({ position: "bottomright" });
   
     legend.onAdd = function() {
-      var div = L.DomUtil.create("div", "info legend");
+      let div = L.DomUtil.create("div", "info legend");
   
-      var limits = ["-10-10", "10-30", "30-50", "50-70", "70-90", "90+"];
-      var colors = ["#39FF14", "#DEFF00", "#FCAE1E", "#FF6700", "#F89880", "#FE019A", "#000000"];
+      let limits = ["-10-10", "10-30", "30-50", "50-70", "70-90", "90+"];
+      let colors = ["#39FF14", "#DEFF00", "#FCAE1E", "#FF6700", "#F89880", "#FE019A", "#000000"];
       labels = [];
   
       limits.forEach((limit, i) => {    
@@ -93,6 +93,6 @@ var myMap = L.map('map', {
         return div;
     };
   
-    // Adding legend to the map
+    // Add legend to the map
     legend.addTo(myMap);
   });

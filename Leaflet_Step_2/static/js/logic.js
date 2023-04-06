@@ -1,7 +1,7 @@
-// Create base layers for the map - grayscale, satellite, and outdoors
+// Create base layers for the map. Types of layers: grayscale, satellite, and outdoors
 
 // Create greyscale layers
-var grayscalemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+let grayscalemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
   maxZoom: 18,
   id: "light-v10",
@@ -9,7 +9,7 @@ var grayscalemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/til
 });
 
 // Create satellite map
-var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+let satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
   maxZoom: 18,
   id: "satellite-v9",
@@ -17,7 +17,7 @@ var satellitemap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/til
 });
 
 // Create outdoors map 
-var outdoorsmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+let outdoorsmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
   maxZoom: 18,
   id: "outdoors-v11",
@@ -25,35 +25,35 @@ var outdoorsmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tile
 });
 
 // Create a base map object
-var baseMaps = {
+let baseMaps = {
   "Satellite": satellitemap,
   "Grayscale": grayscalemap,
   "Outdoor": outdoorsmap
 };
 
 // Create layer groups - earthquake and tectonic
-var earthquakeMarkers = L.layerGroup();
-var tectonicMarkers = L.layerGroup();
+let earthquakeMarkers = L.layerGroup();
+let tectonicMarkers = L.layerGroup();
 
 // Create overlay map object
-var overlayMaps = {
+let overlayMaps = {
   "Earthquakes": earthquakeMarkers,
   "Tectonic plates": tectonicMarkers  
 };
 
 // Define map objects
-var myMap = L.map("map", {
+let myMap = L.map("map", {
   center: [39.8283, -98.5795],
   zoom: 5,
   layers: [satellitemap, earthquakeMarkers]
 });
 
-//Add layer control to the map
+//Add layer controls to the map
 L.control.layers(baseMaps, overlayMaps, {
   collapsed: false
 }).addTo(myMap);
 
-// Creates the circle layer from the GeoJSON data
+// Create the circle layer from the GeoJSON dataset
 function createCircleMarker(feature, latlng){
   // Change the circles appearance
   let options = {
@@ -67,7 +67,7 @@ function createCircleMarker(feature, latlng){
   return L.circleMarker(latlng, options);
 }
 
-// Gives each earthquake a different radius based on it's magnitude
+// Create a different radius based on it's magnitude
 function getRadius(magnitude) {
   if (magnitude == 0) {
     return 1;
@@ -75,7 +75,7 @@ function getRadius(magnitude) {
   return magnitude * 4;
 }
 
-// Gives each earthquake a different color based on depth
+// Create a different color based on depth
 function getColor(depth) {
   switch (true) {
     case (depth <= 10):
@@ -96,7 +96,7 @@ function getColor(depth) {
 }
 
 // Store our API endpoint as earthquake_Url
-var earthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+let earthquakeUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // Perform a GET request to the earthquake URL
 d3.json(earthquakeUrl).then(function(data) {
@@ -104,7 +104,7 @@ d3.json(earthquakeUrl).then(function(data) {
   
   // Use Leaflet's geoJSON method to turn the data into a feature layer(s)
   L.geoJSON(data.features, {
-    // Call the function createCircleMarker - creates symbol for this layer
+    // Call the function createCircleMarker and create symbols for this layer
     pointToLayer: createCircleMarker,
     // Create pop up layer
     onEachFeature: function(feature, layer) {
@@ -117,7 +117,7 @@ d3.json(earthquakeUrl).then(function(data) {
 })
 
 // Store our API endpoint as tectonic_Url
-var tectonicUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
+let tectonicUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
 // Perform a GET request to the tectonic URL
 d3.json(tectonicUrl).then(function(data) {
   console.log(data.features);
@@ -134,14 +134,14 @@ d3.json(tectonicUrl).then(function(data) {
   }).addTo(tectonicMarkers);
 });
 
-// Set up the legend on the map
-var legend = L.control({ position: "bottomright" });
+// Create legendfor the map
+let legend = L.control({ position: "bottomright" });
 
 legend.onAdd = function() {
-  var div = L.DomUtil.create("div", "info legend");
+  let div = L.DomUtil.create("div", "info legend");
 
-  var limits = ["-10-10", "10-30", "30-50", "50-70", "70-90", "90+"];
-  var colors = ["#39FF14", "#DEFF00", "#FCAE1E", "#FF6700", "#F89880", "#FE019A", "#000000"];
+  let limits = ["-10-10", "10-30", "30-50", "50-70", "70-90", "90+"];
+  let colors = ["#39FF14", "#DEFF00", "#FCAE1E", "#FF6700", "#F89880", "#FE019A", "#000000"];
   labels = [];
 
   limits.forEach((limit, i) => {    
